@@ -1,0 +1,89 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STL Z Studio</title><style>
+*{box-sizing:border-box}body{margin:0;background:#101c23;color:#dce8e9;font:13px "Segoe UI","Yu Gothic",sans-serif}header{height:68px;background:#16232a;border-bottom:1px solid #33444b;display:flex;align-items:center;gap:15px;padding:0 24px}header b{font-size:18px}header small{color:#83a098;letter-spacing:2px}button,.open{cursor:pointer;border:1px solid #3b5059;border-radius:6px;padding:10px 13px;color:#c9dce2;background:#20323c;font:inherit}button:hover{border-color:#b5edca}.logo{background:#b5edca;color:#17382a;border-radius:7px;padding:7px 10px;font-size:22px;font-weight:bold}header button{margin-left:auto}main{display:grid;grid-template-columns:290px 1fr;height:calc(100dvh - 68px);min-height:580px}aside{background:#16232a;padding:28px 24px;overflow:auto}h1{font-size:26px;line-height:1.6;margin:12px 0}.sub{color:#90a6ae;font-size:12px}.open{display:block;text-align:center;background:#b5edca;color:#143e2b;font-weight:700;margin-top:25px}.open input{display:none}.privacy{font-size:10px;text-align:center;color:#90ad9f;margin:10px 0 25px}section{border-top:1px solid #32454d;padding:24px 0}h2{font-size:13px;margin:0 0 18px}.num{display:flex;align-items:center;padding:12px;background:#101d24;border:1px solid #48616a;border-radius:7px}.num input{font:32px "Segoe UI";background:none;border:0;color:#e0f7e8;width:100%;outline:none}.num span{color:#90a6ae}input[type=range]{width:100%;margin:20px 0 8px;accent-color:#b5edca}.ends{display:flex;justify-content:space-between;font-size:10px;color:#87a1ac}.presets{display:flex;gap:6px;margin:18px 0}.presets button{flex:1;padding:8px 0}.check{font-size:11px;color:#a3b7bc;display:block;margin:20px 0}input[type=checkbox]{accent-color:#b5edca}.wide{width:100%}dl{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:12px}dt{color:#8ea7b0}dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}#name{overflow-wrap:anywhere}.hint{font-size:10px;color:#7d98a3;line-height:1.8}article{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#2a414b,#101d26)}canvas{display:block;width:100%;height:100%;touch-action:none}.top{position:absolute;top:23px;left:25px;right:25px;display:flex;justify-content:space-between;color:#91aaa9;font-size:10px;pointer-events:none}.top span:last-child{letter-spacing:2px;color:#6e8998}nav{position:absolute;top:58px;left:25px;display:flex;gap:5px}nav button{font-size:11px;background:#1c2f38dc}.bottom{position:absolute;bottom:22px;left:25px;right:25px;display:flex;justify-content:space-between;color:#89a3af;font-size:10px;pointer-events:none}#badge{color:#b5edca;font-size:14px}.axis{position:absolute;right:32px;bottom:65px;color:#96c8eb;font-size:14px;line-height:2;text-align:center}.axis span{color:#bdd9a1}#error{position:absolute;left:25px;right:25px;bottom:65px;background:#693e32;padding:15px;border-radius:7px;color:#ffe3d9}#drop{display:none;position:absolute;inset:100px 30px;background:#17382be6;border:2px dashed #b5edca;border-radius:12px;align-items:center;justify-content:center;font-size:22px;pointer-events:none}article.drag #drop{display:flex}@media(max-width:650px){main{grid-template-columns:230px 1fr}aside{padding:20px 15px}h1{font-size:22px}header small,.top span:last-child,.bottom span:first-child{display:none}nav{flex-wrap:wrap;right:15px;left:15px}}@media(max-width:480px){main{display:flex;flex-direction:column;height:auto}article{height:65dvh;min-height:350px}aside{order:2}h1,.sub{display:none}header{padding:0 12px}}
+</style><header><span class="logo">Z↗</span><b>STL Z Studio</b><small>LOCAL 3D VIEWER</small><button id="full">全画面 ↗</button></header><main><aside><small class="sub">WORKSPACE</small><h1>形状を、<br>違うスケールで。</h1><p class="sub">Z軸を伸ばして、細部を読み解く。</p><label class="open" tabindex="0">＋ STLファイルを開く<input id="file" type="file" accept=".stl"></label><p class="privacy">端末内で処理 · ファイルの送信なし</p><section><h2>Z軸スケール</h2><div class="num"><input id="scale" type="number" min="0.001" max="10000" step="0.1" value="1" aria-label="Z軸倍率"><span>倍</span></div><input id="range" type="range" min="-2" max="2" step="0.001" value="0" aria-label="Z軸倍率スライダー"><div class="ends"><span>0.01×</span><span>1×</span><span>100×</span></div><div class="presets"><button data-scale=".5">0.5×</button><button data-scale="1">1×</button><button data-scale="2">2×</button><button data-scale="5">5×</button></div><label class="check"><input id="auto" type="checkbox" checked> 倍率に合わせて画面に収める</label><button class="wide" id="reset">倍率をリセット</button></section><section><h2>モデル情報</h2><p id="name">サンプル地形</p><dl><dt>三角形</dt><dd id="tri">—</dd><dt>X 幅</dt><dd id="dx">—</dd><dt>Y 奥行き</dt><dd id="dy">—</dd><dt>Z 高さ</dt><dd id="dz">—</dd></dl><p class="hint">寸法はSTLの座標値（単位情報なし）。<br>Zの寸法は倍率適用後の値です。</p></section><button id="sample" class="wide">サンプルを表示</button><p class="hint">ASCII / Binary STL 対応<br>倍率は表示用です。元ファイルは変更しません。</p></aside><article id="viewport"><canvas id="canvas"></canvas><div class="top"><span id="status" role="status">● サンプルを表示中</span><span>Z-UP / PERSPECTIVE</span></div><nav><button data-view="iso">立体</button><button data-view="top">上面</button><button data-view="front">正面</button><button data-view="side">側面</button><button id="fit">全体表示</button></nav><div id="drop">STLをドロップして開く</div><div class="axis">Z ↑<br><span>X ↘　Y ↙</span></div><div class="bottom"><span>ドラッグ：回転 / 右ドラッグ：移動 / ホイール：拡大</span><b id="badge">Z × 1.00</b></div><div id="error" role="alert" hidden></div></article></main>
+<script>window.addEventListener("error",function(e){if(e.target && e.target.tagName==="SCRIPT"){var el=document.getElementById("error");el.hidden=false;el.textContent="3Dライブラリを読み込めませんでした。インターネット接続を確認し、ChromeまたはEdgeで再度開いてください。";}},true);</script><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script><script type="module">import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+const $=id=>document.getElementById(id);
+const error=msg=>{$('error').textContent=msg;$('error').hidden=!msg;};
+let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:$('canvas'),antialias:true});}catch(e){error('3D表示を開始できません。WebGL対応のブラウザで開いてください。');throw e;}
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,1,.01,10000);
+camera.up.set(0,0,1);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xe7f6ff,0x34423a,2.5));
+const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(-3,-4,7);scene.add(light);
+const rim=new THREE.DirectionalLight(0xa1d8ff,1.8);rim.position.set(3,2,3);scene.add(rim);
+let mesh,grid,dims=new THREE.Vector3(),factor=1,request=0,view='iso';
+const format=n=>n.toLocaleString('ja-JP',{maximumSignificantDigits:6});
+function fit(){
+ if(!mesh)return;
+ const size=new THREE.Box3().setFromObject(mesh).getSize(new THREE.Vector3());
+ const radius=Math.max(size.length()/2,0.001);
+ const angle=Math.min(camera.fov*Math.PI/360,Math.atan(Math.tan(camera.fov*Math.PI/360)*camera.aspect));
+ const distance=radius/Math.sin(angle)*1.15;
+ let direction=camera.position.clone().sub(controls.target).normalize();
+ if(direction.lengthSq()<.5)direction.set(1,-1,1).normalize();
+ controls.target.set(0,0,0);camera.position.copy(direction.multiplyScalar(distance));
+ camera.near=Math.max(distance/10000,1e-7);camera.far=Math.max(distance*100,10);camera.updateProjectionMatrix();controls.update();
+}
+function scale(value){
+ const n=Number(value);if(!Number.isFinite(n)||n<.001||n>10000){error('倍率は0.001〜10000の範囲で入力してください。');return;}
+ error('');factor=n;$('scale').value=n;$('range').value=Math.max(-2,Math.min(2,Math.log10(n)));
+ $('badge').textContent='Z × '+format(n);
+ if(mesh){mesh.scale.z=n;$('dz').textContent=format(dims.z*n);if($('auto').checked)fit();}
+}
+function install(geometry,name){
+ const p=geometry.getAttribute('position');if(!p||p.count<3||p.count%3)throw Error('有効な三角形が見つかりません。');
+ for(let i=0;i<p.array.length;i++)if(!Number.isFinite(p.array[i]))throw Error('座標に無効な値があります。');
+ geometry.computeBoundingBox();geometry.boundingBox.getSize(dims);
+ if(dims.length()===0)throw Error('モデルの大きさが0です。');
+ geometry.center();geometry.computeVertexNormals();
+ if(mesh){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();}
+ mesh=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:0x9ccdb7,roughness:.65,metalness:.12,side:THREE.DoubleSide}));scene.add(mesh);
+ if(grid){scene.remove(grid);grid.geometry.dispose();grid.material.dispose();}
+ const extent=Math.max(dims.x,dims.y,dims.z,.01)*2;
+ grid=new THREE.GridHelper(extent,20,0x52716f,0x2e4652);grid.rotation.x=Math.PI/2;grid.position.z=-dims.z/2-.001*extent;scene.add(grid);
+ $('name').textContent=name;$('tri').textContent=(p.count/3).toLocaleString('ja-JP');$('dx').textContent=format(dims.x);$('dy').textContent=format(dims.y);
+ scale(factor);grid.position.z=-dims.z*factor/2-.001*extent;fit();
+}
+function sample(){
+ const vertices=[],n=90,step=100/n;
+ const z=(x,y)=>14*Math.exp(-((x-8)**2+(y-4)**2)/460)+8*Math.exp(-((x+22)**2+(y+12)**2)/180)+1.7*Math.sin(x*.16)*Math.cos(y*.13);
+ const point=(i,j)=>{const x=-50+i*step,y=-50+j*step;return[x,y,z(x,y)];};
+ for(let i=0;i<n;i++)for(let j=0;j<n;j++){const a=point(i,j),b=point(i+1,j),c=point(i+1,j+1),d=point(i,j+1);vertices.push(...a,...b,...c,...a,...c,...d);}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));install(g,'サンプル地形');$('status').textContent='● サンプルを表示中';
+}
+async function load(file){
+ if(!file)return;const id=++request;
+ error('');$('status').textContent='読み込み中…';
+ try{
+ if(!/\.stl$/i.test(file.name))throw Error('拡張子 .stl のファイルを選択してください。');
+ if(file.size>300*1024*1024)throw Error('このビューアでは300MB以下のSTLを選択してください。');
+ const buffer=await file.arrayBuffer();if(id!==request)return;
+ install(new STLLoader().parse(buffer),file.name);$('status').textContent='● 端末内で読み込み完了';
+ }catch(e){if(id===request){error('読み込めませんでした：'+e.message);$('status').textContent='読み込みエラー';}}
+}
+$('file').onchange=e=>{load(e.target.files[0]);e.target.value='';};
+document.querySelector('.open').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('file').click();}};
+$('scale').oninput=e=>scale(e.target.value);$('range').oninput=e=>scale(Number((10**Number(e.target.value)).toPrecision(4)));
+document.querySelectorAll('[data-scale]').forEach(b=>b.onclick=()=>scale(b.dataset.scale));
+$('reset').onclick=()=>scale(1);$('fit').onclick=fit;$('sample').onclick=()=>{request++;error('');sample();};
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{
+ view=b.dataset.view;const distance=camera.position.distanceTo(controls.target)||100;
+ const d={iso:[1,-1,.8],top:[0,-.00001,1],front:[0,-1,0],side:[1,0,0]}[view];
+ camera.position.copy(controls.target).add(new THREE.Vector3(...d).normalize().multiplyScalar(distance));fit();
+});
+$('full').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{error('このブラウザでは全画面に切り替えできません。');}};
+let dragDepth=0;
+window.addEventListener('dragover',e=>e.preventDefault());
+window.addEventListener('drop',e=>{e.preventDefault();dragDepth=0;$('viewport').classList.remove('drag');load(e.dataTransfer.files[0]);});
+window.addEventListener('dragenter',e=>{e.preventDefault();dragDepth++;$('viewport').classList.add('drag');});
+window.addEventListener('dragleave',()=>{if(--dragDepth<=0){dragDepth=0;$('viewport').classList.remove('drag');}});
+const resize=new ResizeObserver(()=>{const w=$('viewport').clientWidth,h=$('viewport').clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();});resize.observe($('viewport'));
+camera.position.set(120,-150,120);sample();
+renderer.setAnimationLoop(()=>{controls.update();if(grid)grid.position.z=-dims.z*factor/2-Math.max(dims.length(),.01)*.001;renderer.render(scene,camera);});
+</script></html>
+
+
