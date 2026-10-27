@@ -60,7 +60,7 @@ async function load(file){
  error('');$('status').textContent='読み込み中…';
  try{
  if(!/\.stl$/i.test(file.name))throw Error('拡張子 .stl のファイルを選択してください。');
- if(file.size>300*1024*1024)throw Error('このビューアでは300MB以下のSTLを選択してください。');
+ if(file.size>500*1024*1024)throw Error('このビューアでは500MB以下のSTLを選択してください。');
  const buffer=await file.arrayBuffer();if(id!==request)return;
  install(new STLLoader().parse(buffer),file.name);$('status').textContent='● 端末内で読み込み完了';
  }catch(e){if(id===request){error('読み込めませんでした：'+e.message);$('status').textContent='読み込みエラー';}}
